@@ -20,6 +20,9 @@ SRCS := $(wildcard $(SRC_DIR)/*.c)
 OBJS := $(subst $(SRC_DIR)/,$(BUILD_DIR)/,$(SRCS:.c=.o))
 
 INSTALL_DIR := $(DESTDIR)$(PREFIX)/bin
+SCRIPTS_DIR := scripts
+SCRIPTS_INSTALL_DIR := $(HOME)/.local/bin
+SCRIPTS := $(wildcard $(SCRIPTS_DIR)/sb-*)
 
 # Prettify output
 PRINTF := @printf "%-8s %s\n"
@@ -46,12 +49,25 @@ clean:
 	$(PRINTF) "CLEAN" $(BUILD_DIR)
 	$Q$(RM) $(BUILD_DIR)/*
 
-install: $(BUILD_DIR)/$(BIN)
+install: install-bin install-scripts
+
+install-bin: $(BUILD_DIR)/$(BIN)
 	$(PRINTF) "INSTALL" $(INSTALL_DIR)/$(BIN)
 	$Qinstall -D -m 755 $< $(INSTALL_DIR)/$(BIN)
+
+install-scripts:
+	$Qmkdir -p $(SCRIPTS_INSTALL_DIR)
+	$Qfor s in $(SCRIPTS); do \
+		printf "%-8s %s\n" "INSTALL" "$(SCRIPTS_INSTALL_DIR)/$$(basename $$s)"; \
+		install -m 755 $$s $(SCRIPTS_INSTALL_DIR)/; \
+	done
 
 uninstall:
 	$(PRINTF) "RM" $(INSTALL_DIR)/$(BIN)
 	$Q$(RM) $(INSTALL_DIR)/$(BIN)
+	$Qfor s in $(SCRIPTS); do \
+		printf "%-8s %s\n" "RM" "$(SCRIPTS_INSTALL_DIR)/$$(basename $$s)"; \
+		$(RM) $(SCRIPTS_INSTALL_DIR)/$$(basename $$s); \
+	done
 
-.PHONY: all clean install uninstall
+.PHONY: all clean install install-bin install-scripts uninstall

@@ -1,0 +1,3 @@
+#!/bin/sh
+# sb-swp — Swap used/total in GiB
+free -m | awk '/Swap:/ { printf "%.1f/%.1fGiB", $3/1024, $2/1024 }'

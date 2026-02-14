@@ -1,0 +1,11 @@
+#!/bin/sh
+# sb-cpu — CPU usage % (samples /proc/stat over 0.25s)
+read u1 t1 <<EOF
+$(awk 'NR==1{u=$2+$4; t=$2+$4+$5; print u,t; exit}' /proc/stat)
+EOF
+sleep 0.25
+read u2 t2 <<EOF
+$(awk 'NR==1{u=$2+$4; t=$2+$4+$5; print u,t; exit}' /proc/stat)
+EOF
+awk -v u1="$u1" -v u2="$u2" -v t1="$t1" -v t2="$t2" \
+    'BEGIN{ if (t2==t1) printf("0.0%%"); else printf("%.1f%%", (u2-u1)*100/(t2-t1)) }'

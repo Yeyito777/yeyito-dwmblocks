@@ -1,0 +1,3 @@
+#!/bin/sh
+# sb-mem — Memory used/total in GiB
+free -m | awk '/Mem:/ {printf "%.1f/%.1fGiB", $3/1024, $2/1024}'

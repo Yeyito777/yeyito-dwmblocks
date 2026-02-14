@@ -1,0 +1,8 @@
+#!/bin/sh
+# sb-timer — Shows timer status if active (signal-only, updated by timer dmenu script)
+[ -f /tmp/timer_state ] || exit 0
+output=$(timer 2>/dev/null)
+case "$output" in
+    "No active timer"*) ;;
+    *) printf "%s" "$output" ;;
+esac

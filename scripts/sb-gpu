@@ -1,0 +1,12 @@
+#!/bin/sh
+# sb-gpu — AMD GPU usage % via radeontop
+usage=$(radeontop -d - -l 1 2>/dev/null | awk '
+    NR>1 && /gpu/ {
+        if (match($0, /[0-9]+(\.[0-9]+)?%/)) {
+            val = substr($0, RSTART, RLENGTH)
+            sub(/%/, "", val)
+            printf("%.1f%%", val+0)
+        } else print "N/A"
+        exit
+    }')
+printf "%s" "${usage:-N/A}"
