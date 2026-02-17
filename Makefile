@@ -21,7 +21,7 @@ OBJS := $(subst $(SRC_DIR)/,$(BUILD_DIR)/,$(SRCS:.c=.o))
 
 INSTALL_DIR := $(DESTDIR)$(PREFIX)/bin
 SCRIPTS_DIR := scripts
-SCRIPTS_INSTALL_DIR := $(HOME)/.local/bin
+SCRIPTS_INSTALL_DIR := $(shell echo ~$${SUDO_USER:-$$USER})/.local/bin
 SCRIPTS := $(wildcard $(SCRIPTS_DIR)/sb-*)
 
 # Prettify output
