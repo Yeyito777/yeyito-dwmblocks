@@ -20,6 +20,7 @@
 //   interval: seconds between auto-updates (0 = signal-only)
 //   signal:   unique ID for on-demand update via pkill -RTMIN+N dwmblocks
 #define BLOCKS(X)                    \
+    X("",      "sb-stopwatch", 1, 7) \
     X("",      "sb-timer",   1, 5)   \
     X("CPU: ", "sb-cpu",     1, 1)   \
     X("MEM: ", "sb-mem",     1, 2)   \
