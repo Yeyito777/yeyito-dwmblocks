@@ -26,6 +26,7 @@
     X("MEM: ", "sb-mem",     1, 2)   \
     X("SWP: ", "sb-swp",     1, 3)   \
     X("GPU: ", "sb-gpu",     2, 4)   \
+    X("VRAM: ","sb-vram",    4, 8)  \
     X("BAT: ", "sb-bat",    30, 6)
 
 #endif  // CONFIG_H
