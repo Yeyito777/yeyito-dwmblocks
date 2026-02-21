@@ -1,0 +1,30 @@
+#!/bin/sh
+# sb-net — sample network RX/TX rates, cache for sb-rx and sb-tx
+# Called by sb-rx; sb-tx reads the cached result.
+cache=/tmp/sb-net-cache
+iface=$(ip route show default | awk '{print $5; exit}')
+[ -z "$iface" ] && printf "0 0" > "$cache" && exit
+
+read rx1 tx1 <<EOF
+$(awk -v i="$iface" '$1==i":"{print $2, $10; exit}' /proc/net/dev)
+EOF
+sleep 0.5
+read rx2 tx2 <<EOF
+$(awk -v i="$iface" '$1==i":"{print $2, $10; exit}' /proc/net/dev)
+EOF
+
+fmt() {
+    awk -v b="$1" 'BEGIN{
+        r = b / 0.5
+        if      (r >= 10737418240) printf("%.0fGiB", r/1073741824)
+        else if (r >= 1073741824)  printf("%.1fGiB", r/1073741824)
+        else if (r >= 10485760)    printf("%.0fMiB", r/1048576)
+        else if (r >= 1048576)     printf("%.1fMiB", r/1048576)
+        else if (r >= 10240)       printf("%.0fKiB", r/1024)
+        else                       printf("%.1fKiB", r/1024)
+    }'
+}
+
+rx=$(( rx2 - rx1 ))
+tx=$(( tx2 - tx1 ))
+printf "%s\t%s" "$(fmt $rx)" "$(fmt $tx)" > "$cache"

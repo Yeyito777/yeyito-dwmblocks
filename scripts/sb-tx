@@ -1,0 +1,3 @@
+#!/bin/sh
+# sb-tx — network egress rate (read from sb-net cache)
+cut -f2 /tmp/sb-net-cache

@@ -1,0 +1,4 @@
+#!/bin/sh
+# sb-rx — network ingress rate (read from sb-net cache)
+sh "$(dirname "$0")/sb-net"
+cut -f1 /tmp/sb-net-cache
